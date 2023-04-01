@@ -1,0 +1,47 @@
+[gd_scene load_steps=5 format=3 uid="uid://d2xvmr4jth8ti"]
+
+[ext_resource type="Script" path="res://scripts/level.gd" id="1_foce3"]
+[ext_resource type="PackedScene" uid="uid://b28h5bpui8isd" path="res://scenes/player.tscn" id="2_qtv32"]
+[ext_resource type="PackedScene" uid="uid://debaamvol7jt0" path="res://scenes/bullet.tscn" id="3_2s1kj"]
+[ext_resource type="Script" path="res://scripts/pause.gd" id="4_67tkd"]
+
+[node name="Level" type="Node2D"]
+process_mode = 1
+script = ExtResource("1_foce3")
+
+[node name="Player" parent="." instance=ExtResource("2_qtv32")]
+position = Vector2(257, 320)
+
+[node name="Bullet" parent="." instance=ExtResource("3_2s1kj")]
+position = Vector2(528, 537)
+speed = 5
+
+[node name="Bullet2" parent="." instance=ExtResource("3_2s1kj")]
+position = Vector2(643, 479)
+speed = 5
+
+[node name="Bullet3" parent="." instance=ExtResource("3_2s1kj")]
+position = Vector2(549, 450)
+speed = 5
+
+[node name="Bullet4" parent="." instance=ExtResource("3_2s1kj")]
+position = Vector2(318, 462)
+speed = 5
+
+[node name="PauseButton" type="Button" parent="."]
+process_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -79.0
+offset_top = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 0
+action_mode = 0
+text = "Continue"
+script = ExtResource("4_67tkd")
+
+[connection signal="pressed" from="PauseButton" to="." method="_on_pause_button_pressed"]
