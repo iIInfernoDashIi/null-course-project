@@ -8,26 +8,31 @@ extends CharacterBody2D
 
 func _ready():
 	$ImmunityTimer.wait_time = immunity_frames/60.0
-	print($ImmunityTimer.wait_time)
-	pass
+	
+	$AnimationPlayer.play("none")
+	$CollisionShape/CollisionSprite/AnimationCollision.play("hitbox_rotate")
+
 
 
 func _process(delta):
 	velocity = Input.get_vector("left", "right", "up", "down").normalized()
+	$CollisionShape/CollisionSprite.hide()
 	if Input.is_action_pressed("slow"):
 		velocity *= 0.5
+		$CollisionShape/CollisionSprite.show()
 	move_and_collide(velocity * speed * delta)
 
 
 func take_damage():
 	if $ImmunityTimer.is_stopped():
+		print("!!!")
 		hp -= 1
 		if (hp == 0):
 			queue_free()
-		$AnimationPlayer.play("immune")
+		$AnimationPlayer.play("blink")
 		$ImmunityTimer.start()
 	
 
 
 func _on_immunity_timer_timeout():
-	$AnimationPlayer.stop()
+	$AnimationPlayer.play("none")
