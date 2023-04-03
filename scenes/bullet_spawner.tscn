@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://m3uud6b3p8pr"]
+
+[ext_resource type="Script" path="res://scripts/bullet_spawner.gd" id="1_i6nk3"]
+
+[node name="BulletSpawner" type="Node2D"]
+script = ExtResource("1_i6nk3")
+
+[node name="Spawner" type="Timer" parent="."]
+
+[node name="Delay" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="Spawner" to="." method="_on_spawner_timeout"]
+[connection signal="timeout" from="Delay" to="." method="_on_delay_timeout"]
