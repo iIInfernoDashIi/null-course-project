@@ -1,7 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://debaamvol7jt0"]
+[gd_scene load_steps=4 format=3 uid="uid://dc60ka714byjl"]
 
-[ext_resource type="Texture2D" uid="uid://copsilg1xf06o" path="res://icon.svg" id="1_a4jjl"]
 [ext_resource type="Script" path="res://scripts/bullet.gd" id="1_e5c0f"]
+[ext_resource type="Texture2D" uid="uid://copsilg1xf06o" path="res://sprites/icon.svg" id="2_3vwis"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_scbec"]
 
@@ -13,10 +13,11 @@ shape = SubResource("CircleShape2D_scbec")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 scale = Vector2(0.15, 0.15)
-texture = ExtResource("1_a4jjl")
+texture = ExtResource("2_3vwis")
 
 [node name="LifeTime" type="Timer" parent="."]
 one_shot = true
 
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]
 [connection signal="body_entered" from="." to="." method="_on_Bullet_body_entered"]
 [connection signal="timeout" from="LifeTime" to="." method="_on_life_time_timeout"]

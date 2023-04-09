@@ -5,22 +5,29 @@ extends CharacterBody2D
 @export var immunity_frames: int = 60
 @onready var hp := start_hp
 
+@onready var boundStartX = $"../LevelBoundaries".position.x
+@onready var boundEndX = boundStartX + $"../LevelBoundaries/CollisionShape".position.x * 2
+@onready var boundStartY = $"../LevelBoundaries".position.y
+@onready var boundEndY = boundStartY + $"../LevelBoundaries/CollisionShape".position.y * 2
+
 
 func _ready():
 	$ImmunityTimer.wait_time = immunity_frames/60.0
 	
 	$AnimationPlayer.play("none")
-	$CollisionShape/CollisionSprite/AnimationCollision.play("hitbox_rotate")
-
+	$BulletCollision/AnimationCollision.play("hitbox_rotate")
 
 
 func _process(delta):
 	velocity = Input.get_vector("left", "right", "up", "down").normalized()
-	$CollisionShape/CollisionSprite.hide()
+	
+	$BulletCollision/CollisionSprite.hide()
 	if Input.is_action_pressed("slow"):
 		velocity *= 0.5
-		$CollisionShape/CollisionSprite.show()
+		$BulletCollision/CollisionSprite.show()
+		
 	move_and_collide(velocity * speed * delta)
+	position = Vector2(clamp(position.x, boundStartX, boundEndX), clamp(position.y, boundStartY, boundEndY))
 
 
 func take_damage():

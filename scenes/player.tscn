@@ -1,10 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://b28h5bpui8isd"]
+[gd_scene load_steps=9 format=3 uid="uid://c7xhqeiovp07s"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_5mksx"]
-[ext_resource type="Texture2D" uid="uid://copsilg1xf06o" path="res://icon.svg" id="1_n3pf2"]
+[ext_resource type="Texture2D" uid="uid://co4rp103o5io6" path="res://sprites/player.png" id="2_6ddjp"]
 [ext_resource type="Texture2D" uid="uid://c35v4tby34nql" path="res://sprites/hitbox.png" id="3_o8y26"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_1ll8e"]
 
 [sub_resource type="Animation" id="Animation_cvjbc"]
 resource_name = "immune"
@@ -63,21 +61,35 @@ _data = {
 "none": SubResource("Animation_a2psa")
 }
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6sk2r"]
+size = Vector2(2, 2)
+
 [node name="Player" type="CharacterBody2D"]
+scale = Vector2(4, 4)
+motion_mode = 1
 script = ExtResource("1_5mksx")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-scale = Vector2(0.33, 0.33)
-texture = ExtResource("1_n3pf2")
+position = Vector2(-9.53674e-07, -9.53674e-07)
+texture = ExtResource("2_6ddjp")
 
-[node name="CollisionShape" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_1ll8e")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_60nqh")
+}
 
-[node name="CollisionSprite" type="Sprite2D" parent="CollisionShape"]
+[node name="BulletCollision" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_6sk2r")
+
+[node name="CollisionSprite" type="Sprite2D" parent="BulletCollision"]
+visible = false
+position = Vector2(9.53674e-07, 9.53674e-07)
+rotation = 0.356499
 scale = Vector2(0.585, 0.585)
 texture = ExtResource("3_o8y26")
 
-[node name="AnimationCollision" type="AnimationPlayer" parent="CollisionShape/CollisionSprite"]
+[node name="AnimationCollision" type="AnimationPlayer" parent="BulletCollision"]
+root_node = NodePath("../CollisionSprite")
 reset_on_save = false
 libraries = {
 "": SubResource("AnimationLibrary_60nqh")
@@ -85,10 +97,5 @@ libraries = {
 
 [node name="ImmunityTimer" type="Timer" parent="."]
 one_shot = true
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_60nqh")
-}
 
 [connection signal="timeout" from="ImmunityTimer" to="." method="_on_immunity_timer_timeout"]

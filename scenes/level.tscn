@@ -1,43 +1,66 @@
-[gd_scene load_steps=6 format=3 uid="uid://d2xvmr4jth8ti"]
+[gd_scene load_steps=6 format=3 uid="uid://wcmta1qpuiha"]
 
-[ext_resource type="Script" path="res://scripts/level.gd" id="1_foce3"]
-[ext_resource type="PackedScene" uid="uid://b28h5bpui8isd" path="res://scenes/player.tscn" id="2_qtv32"]
-[ext_resource type="PackedScene" uid="uid://debaamvol7jt0" path="res://scenes/bullet.tscn" id="3_2s1kj"]
+[ext_resource type="Script" path="res://scripts/game.gd" id="1_le5m3"]
+[ext_resource type="PackedScene" uid="uid://c7xhqeiovp07s" path="res://scenes/player.tscn" id="2_qtv32"]
 [ext_resource type="Script" path="res://scripts/pause.gd" id="4_67tkd"]
-[ext_resource type="PackedScene" uid="uid://m3uud6b3p8pr" path="res://scenes/bullet_spawner.tscn" id="5_rn1un"]
+[ext_resource type="PackedScene" uid="uid://bqnif3p7bxxff" path="res://scenes/bullet_spawner.tscn" id="5_rn1un"]
 
-[node name="Level" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bcy48"]
+size = Vector2(640, 720)
+
+[node name="game" type="Node"]
 process_mode = 1
-script = ExtResource("1_foce3")
+script = ExtResource("1_le5m3")
+packed_scene = ExtResource("5_rn1un")
 
-[node name="Player" parent="." instance=ExtResource("2_qtv32")]
-position = Vector2(452, 552)
-
-[node name="Player2" parent="." instance=ExtResource("2_qtv32")]
-position = Vector2(607, 550)
-
-[node name="PauseButton" type="Button" parent="."]
+[node name="Control" type="Control" parent="."]
 process_mode = 3
-offset_right = 79.0
+top_level = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_lock_ = true
+
+[node name="Control" type="Control" parent="Control"]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -320.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="PauseButton" type="Button" parent="Control/Control"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -39.5
+offset_right = 39.5
 offset_bottom = 31.0
-size_flags_horizontal = 0
+grow_horizontal = 2
+size_flags_horizontal = 4
 action_mode = 0
 text = "Continue"
 script = ExtResource("4_67tkd")
 
-[node name="BulletSpawner" parent="." instance=ExtResource("5_rn1un")]
-position = Vector2(866, 265)
-spawnDelay = 0.0
+[node name="LevelBoundaries" type="Area2D" parent="."]
+position = Vector2(320, 0)
 
-[node name="Bullet" parent="BulletSpawner" instance=ExtResource("3_2s1kj")]
-speed = 250
+[node name="CollisionShape" type="CollisionShape2D" parent="LevelBoundaries"]
+position = Vector2(320, 360)
+shape = SubResource("RectangleShape2D_bcy48")
 
-[node name="BulletSpawner2" parent="." instance=ExtResource("5_rn1un")]
-position = Vector2(286, 275)
-spawnDelay = 3.0
-spawnRotation = -15.0
+[node name="Player" parent="." instance=ExtResource("2_qtv32")]
+position = Vector2(640, 512)
 
-[node name="Bullet" parent="BulletSpawner2" instance=ExtResource("3_2s1kj")]
-speed = 250
+[node name="EnemyTimer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
 
-[connection signal="pressed" from="PauseButton" to="." method="_on_pause_button_pressed"]
+[connection signal="pressed" from="Control/Control/PauseButton" to="." method="_on_pause_button_pressed"]
+[connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_timer_timeout"]

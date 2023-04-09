@@ -1,9 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://m3uud6b3p8pr"]
+[gd_scene load_steps=4 format=3 uid="uid://bqnif3p7bxxff"]
 
-[ext_resource type="Script" path="res://scripts/bullet_spawner.gd" id="1_i6nk3"]
+[ext_resource type="Script" path="res://scripts/spawners/rotate.gd" id="1_hffjb"]
+[ext_resource type="Texture2D" uid="uid://copsilg1xf06o" path="res://sprites/icon.svg" id="2_2wsc4"]
+[ext_resource type="PackedScene" uid="uid://dc60ka714byjl" path="res://scenes/bullet.tscn" id="2_ufkiw"]
 
 [node name="BulletSpawner" type="Node2D"]
-script = ExtResource("1_i6nk3")
+script = ExtResource("1_hffjb")
+packed_scene = ExtResource("2_ufkiw")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_2wsc4")
 
 [node name="Spawner" type="Timer" parent="."]
 
