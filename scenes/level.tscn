@@ -1,66 +1,130 @@
-[gd_scene load_steps=6 format=3 uid="uid://wcmta1qpuiha"]
+[gd_scene load_steps=13 format=3 uid="uid://b848y2eb8pqji"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_le5m3"]
 [ext_resource type="PackedScene" uid="uid://c7xhqeiovp07s" path="res://scenes/player.tscn" id="2_qtv32"]
 [ext_resource type="Script" path="res://scripts/pause.gd" id="4_67tkd"]
+[ext_resource type="Texture2D" uid="uid://b62w7bkcfywx8" path="res://sprites/bg1.png" id="4_lsgb6"]
+[ext_resource type="Texture2D" uid="uid://ce6aj2gaissed" path="res://sprites/ui/panel.png" id="5_lk4yb"]
 [ext_resource type="PackedScene" uid="uid://bqnif3p7bxxff" path="res://scenes/bullet_spawner.tscn" id="5_rn1un"]
+[ext_resource type="Texture2D" uid="uid://q2fo0pxgrjhj" path="res://sprites/ui/heart.png" id="6_03x8i"]
+[ext_resource type="Texture2D" uid="uid://dub2ig6r2tkfq" path="res://sprites/ui/shield.png" id="7_xuu6b"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_bcy48"]
-size = Vector2(640, 720)
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d4j6l"]
+texture = ExtResource("5_lk4yb")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 2.0
+expand_margin_left = 2.0
+expand_margin_top = 1.0
+expand_margin_right = 2.0
+expand_margin_bottom = 1.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
 
-[node name="game" type="Node"]
+[sub_resource type="GDScript" id="GDScript_8fnik"]
+resource_name = "hpbar"
+script/source = "extends TextureRect
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+
+
+func _on_player_damaged(hp):
+	size.x = hp * 10
+	if hp == 0: hide()
+	print(\"a\")
+"
+
+[sub_resource type="InputEventAction" id="InputEventAction_l3jiy"]
+action = &"pause"
+
+[sub_resource type="Shortcut" id="Shortcut_julpb"]
+events = [SubResource("InputEventAction_l3jiy")]
+
+[node name="Game" type="Node2D"]
 process_mode = 1
 script = ExtResource("1_le5m3")
 packed_scene = ExtResource("5_rn1un")
 
+[node name="Level" type="Node2D" parent="."]
+show_behind_parent = true
+
+[node name="BackGround" type="Sprite2D" parent="Level"]
+position = Vector2(320, 384)
+scale = Vector2(4, 4)
+texture = ExtResource("4_lsgb6")
+
+[node name="Player" parent="Level" instance=ExtResource("2_qtv32")]
+position = Vector2(320, 512)
+
 [node name="Control" type="Control" parent="."]
 process_mode = 3
-top_level = true
+z_index = 1
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
+anchors_preset = 9
 anchor_bottom = 1.0
-grow_horizontal = 2
+offset_right = 640.0
+offset_bottom = 896.0
 grow_vertical = 2
 metadata/_edit_lock_ = true
 
-[node name="Control" type="Control" parent="Control"]
+[node name="Panel" type="Panel" parent="Control"]
+layout_mode = 0
+offset_left = 24.0
+offset_right = 156.0
+offset_bottom = 24.0
+scale = Vector2(4, 4)
+theme_override_styles/panel = SubResource("StyleBoxTexture_d4j6l")
+
+[node name="HpBar" type="TextureRect" parent="Control/Panel"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 3.0
+offset_right = 32.0
+offset_bottom = 11.0
+texture = ExtResource("6_03x8i")
+stretch_mode = 1
+script = SubResource("GDScript_8fnik")
+
+[node name="HpBar2" type="TextureRect" parent="Control/Panel"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 13.0
+offset_right = 32.0
+offset_bottom = 21.0
+texture = ExtResource("7_xuu6b")
+stretch_mode = 1
+
+[node name="PauseButton" type="Button" parent="Control"]
 layout_mode = 1
-anchors_preset = 11
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -320.0
+offset_left = -72.0
+offset_top = 16.0
+offset_right = -8.0
+offset_bottom = 80.0
 grow_horizontal = 0
-grow_vertical = 2
-
-[node name="PauseButton" type="Button" parent="Control/Control"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -39.5
-offset_right = 39.5
-offset_bottom = 31.0
-grow_horizontal = 2
 size_flags_horizontal = 4
+size_flags_vertical = 0
 action_mode = 0
-text = "Continue"
+shortcut = SubResource("Shortcut_julpb")
+text = "
+"
 script = ExtResource("4_67tkd")
-
-[node name="LevelBoundaries" type="Area2D" parent="."]
-position = Vector2(320, 0)
-
-[node name="CollisionShape" type="CollisionShape2D" parent="LevelBoundaries"]
-position = Vector2(320, 360)
-shape = SubResource("RectangleShape2D_bcy48")
-
-[node name="Player" parent="." instance=ExtResource("2_qtv32")]
-position = Vector2(640, 512)
 
 [node name="EnemyTimer" type="Timer" parent="."]
 wait_time = 3.0
 autostart = true
 
-[connection signal="pressed" from="Control/Control/PauseButton" to="." method="_on_pause_button_pressed"]
+[connection signal="damaged" from="Level/Player" to="Control/Panel/HpBar" method="_on_player_damaged"]
+[connection signal="pressed" from="Control/PauseButton" to="Control/PauseButton" method="_on_pressed"]
 [connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_timer_timeout"]

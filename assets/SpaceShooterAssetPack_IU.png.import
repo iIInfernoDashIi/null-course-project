@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c35v4tby34nql"
-path="res://.godot/imported/hitbox.png-62d64968e6255b22b83fb151d6bb37a3.ctex"
+uid="uid://do1iclaiggu6b"
+path="res://.godot/imported/SpaceShooterAssetPack_IU.png-854a81e89f5e8d080d9dab7768dffa8e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/hitbox.png"
-dest_files=["res://.godot/imported/hitbox.png-62d64968e6255b22b83fb151d6bb37a3.ctex"]
+source_file="res://assets/SpaceShooterAssetPack_IU.png"
+dest_files=["res://.godot/imported/SpaceShooterAssetPack_IU.png-854a81e89f5e8d080d9dab7768dffa8e.ctex"]
 
 [params]
 
