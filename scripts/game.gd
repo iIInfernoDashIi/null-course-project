@@ -1,15 +1,12 @@
 extends Node
 
-
-@export var packed_scene: PackedScene
-
-
-func _ready():
-	pass
+var enemies = [
+	preload("res://scenes/enemies/asteroid.tscn"),
+	preload("res://scenes/enemies/asteroid_big.tscn")
+	]
 
 
 func _on_enemy_timer_timeout():
-	var spawner = packed_scene.instantiate()
-	spawner.position = Vector2(randi_range(0,640), 0)
-	spawner.currentRotaion = -36
+	var spawner = enemies.pick_random().instantiate()
+	spawner.position = Vector2(randi_range(0,160), 0)
 	$Level.add_child(spawner)

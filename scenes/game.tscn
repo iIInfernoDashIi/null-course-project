@@ -1,0 +1,178 @@
+[gd_scene load_steps=18 format=3 uid="uid://b848y2eb8pqji"]
+
+[ext_resource type="Script" path="res://scripts/game.gd" id="1_00ya3"]
+[ext_resource type="Texture2D" uid="uid://b62w7bkcfywx8" path="res://assets/bg1.png" id="3_403fl"]
+[ext_resource type="PackedScene" uid="uid://c7xhqeiovp07s" path="res://scenes/player.tscn" id="4_glhq7"]
+[ext_resource type="Texture2D" uid="uid://ce6aj2gaissed" path="res://assets/ui/panel.png" id="5_sngx8"]
+[ext_resource type="FontFile" uid="uid://bik5l33o2vs3s" path="res://fonts/monogram-extended.ttf" id="6_1mm6w"]
+[ext_resource type="Texture2D" uid="uid://q2fo0pxgrjhj" path="res://assets/ui/heart.png" id="6_bw7w5"]
+[ext_resource type="Texture2D" uid="uid://cyu30qqat5ovo" path="res://assets/ui/pause.png" id="8_7yiuj"]
+[ext_resource type="Texture2D" uid="uid://cnr2imcvswmhl" path="res://assets/ui/pause_pressed.png" id="9_bajnv"]
+[ext_resource type="Texture2D" uid="uid://dt7give63llmw" path="res://assets/ui/pause_hover.png" id="10_3xtau"]
+
+[sub_resource type="GDScript" id="GDScript_dvwpi"]
+resource_name = "bg"
+script/source = "extends TextureRect
+
+var speed = 50
+
+
+func _process(delta):
+	position.y += speed * delta
+	if (position.y >= -16):
+		position.y -= 256
+"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d4j6l"]
+texture = ExtResource("5_sngx8")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 2.0
+expand_margin_left = 2.0
+expand_margin_top = 1.0
+expand_margin_right = 2.0
+expand_margin_bottom = 1.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="GDScript" id="GDScript_8fnik"]
+resource_name = "hpbar"
+script/source = "extends TextureRect
+
+
+func _on_player_damaged(hp):
+	size.x = hp * 10
+	if hp == 0: hide()
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_hyjtx"]
+line_spacing = 0.0
+font = ExtResource("6_1mm6w")
+shadow_size = 0
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="GDScript" id="GDScript_5nv4n"]
+resource_name = "score"
+script/source = "extends Label
+
+var player_score = 0
+
+
+func _on_level_child_exiting_tree(node):
+	if (\"Asteroid\" in node.name and node.by_shoot == true):
+		player_score += node.score
+		text = str(player_score)
+"
+
+[sub_resource type="InputEventAction" id="InputEventAction_l3jiy"]
+action = &"pause"
+
+[sub_resource type="Shortcut" id="Shortcut_julpb"]
+events = [SubResource("InputEventAction_l3jiy")]
+
+[sub_resource type="GDScript" id="GDScript_78y3s"]
+resource_name = "pause"
+script/source = "extends Node
+
+
+func _on_toggled(button_pressed):
+	get_tree().paused = button_pressed
+"
+
+[node name="Game" type="Node2D"]
+process_mode = 1
+scale = Vector2(4, 4)
+script = ExtResource("1_00ya3")
+
+[node name="Level" type="Node2D" parent="."]
+show_behind_parent = true
+
+[node name="BackGround" type="TextureRect" parent="Level"]
+offset_top = -272.0
+offset_right = 160.0
+offset_bottom = 240.0
+texture = ExtResource("3_403fl")
+stretch_mode = 1
+script = SubResource("GDScript_dvwpi")
+
+[node name="Player" parent="Level" instance=ExtResource("4_glhq7")]
+position = Vector2(80, 160)
+
+[node name="Control" type="Control" parent="."]
+process_mode = 3
+z_index = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 160.0
+offset_bottom = 224.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_lock_ = true
+
+[node name="Panel" type="Panel" parent="Control"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 2.0
+offset_right = 138.0
+offset_bottom = 16.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_d4j6l")
+
+[node name="HpBar" type="TextureRect" parent="Control/Panel"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 3.0
+offset_right = 52.0
+offset_bottom = 11.0
+texture = ExtResource("6_bw7w5")
+stretch_mode = 1
+script = SubResource("GDScript_8fnik")
+
+[node name="Score" type="Label" parent="Control/Panel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -56.0
+offset_top = -0.5
+offset_right = -1.0
+offset_bottom = 15.5
+grow_horizontal = 0
+text = "0"
+label_settings = SubResource("LabelSettings_hyjtx")
+horizontal_alignment = 2
+script = SubResource("GDScript_5nv4n")
+
+[node name="PauseButton" type="TextureButton" parent="Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -16.0
+offset_top = 2.0
+offset_right = -4.0
+offset_bottom = 15.0
+grow_horizontal = 0
+size_flags_horizontal = 4
+size_flags_vertical = 0
+toggle_mode = true
+action_mode = 0
+shortcut = SubResource("Shortcut_julpb")
+shortcut_feedback = false
+shortcut_in_tooltip = false
+texture_normal = ExtResource("8_7yiuj")
+texture_pressed = ExtResource("9_bajnv")
+texture_hover = ExtResource("10_3xtau")
+stretch_mode = 0
+script = SubResource("GDScript_78y3s")
+
+[node name="EnemyTimer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[connection signal="child_exiting_tree" from="Level" to="Control/Panel/Score" method="_on_level_child_exiting_tree"]
+[connection signal="damaged" from="Level/Player" to="Control/Panel/HpBar" method="_on_player_damaged"]
+[connection signal="toggled" from="Control/PauseButton" to="Control/PauseButton" method="_on_toggled"]
+[connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_timer_timeout"]
