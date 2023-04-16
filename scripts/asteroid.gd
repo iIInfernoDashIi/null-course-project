@@ -17,7 +17,7 @@ func _on_life_time_timeout():
 
 func _on_body_entered(body):
 	if body.name == "Player":
-		body.take_damage(self)
+		body.damage(self)
 
 
 func destroy():

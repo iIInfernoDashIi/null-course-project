@@ -1,7 +1,7 @@
-[gd_scene load_steps=18 format=3 uid="uid://b848y2eb8pqji"]
+[gd_scene load_steps=17 format=3 uid="uid://sqcuvh4lmyas"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_00ya3"]
-[ext_resource type="Texture2D" uid="uid://b62w7bkcfywx8" path="res://assets/bg1.png" id="3_403fl"]
+[ext_resource type="Texture2D" uid="uid://b62w7bkcfywx8" path="res://assets/bg0.png" id="2_7r2xh"]
 [ext_resource type="PackedScene" uid="uid://c7xhqeiovp07s" path="res://scenes/player.tscn" id="4_glhq7"]
 [ext_resource type="Texture2D" uid="uid://ce6aj2gaissed" path="res://assets/ui/panel.png" id="5_sngx8"]
 [ext_resource type="FontFile" uid="uid://bik5l33o2vs3s" path="res://fonts/monogram-extended.ttf" id="6_1mm6w"]
@@ -41,7 +41,7 @@ resource_name = "hpbar"
 script/source = "extends TextureRect
 
 
-func _on_player_damaged(hp):
+func _on_player_hp_changed(hp):
 	size.x = hp * 10
 	if hp == 0: hide()
 "
@@ -51,19 +51,6 @@ line_spacing = 0.0
 font = ExtResource("6_1mm6w")
 shadow_size = 0
 shadow_color = Color(0, 0, 0, 1)
-
-[sub_resource type="GDScript" id="GDScript_5nv4n"]
-resource_name = "score"
-script/source = "extends Label
-
-var player_score = 0
-
-
-func _on_level_child_exiting_tree(node):
-	if (\"Asteroid\" in node.name and node.by_shoot == true):
-		player_score += node.score
-		text = str(player_score)
-"
 
 [sub_resource type="InputEventAction" id="InputEventAction_l3jiy"]
 action = &"pause"
@@ -92,7 +79,7 @@ show_behind_parent = true
 offset_top = -272.0
 offset_right = 160.0
 offset_bottom = 240.0
-texture = ExtResource("3_403fl")
+texture = ExtResource("2_7r2xh")
 stretch_mode = 1
 script = SubResource("GDScript_dvwpi")
 
@@ -124,7 +111,7 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_d4j6l")
 layout_mode = 0
 offset_left = 2.0
 offset_top = 3.0
-offset_right = 52.0
+offset_right = 32.0
 offset_bottom = 11.0
 texture = ExtResource("6_bw7w5")
 stretch_mode = 1
@@ -143,7 +130,6 @@ grow_horizontal = 0
 text = "0"
 label_settings = SubResource("LabelSettings_hyjtx")
 horizontal_alignment = 2
-script = SubResource("GDScript_5nv4n")
 
 [node name="PauseButton" type="TextureButton" parent="Control"]
 layout_mode = 1
@@ -169,10 +155,10 @@ stretch_mode = 0
 script = SubResource("GDScript_78y3s")
 
 [node name="EnemyTimer" type="Timer" parent="."]
-wait_time = 3.0
+wait_time = 1.5
 autostart = true
 
-[connection signal="child_exiting_tree" from="Level" to="Control/Panel/Score" method="_on_level_child_exiting_tree"]
-[connection signal="damaged" from="Level/Player" to="Control/Panel/HpBar" method="_on_player_damaged"]
+[connection signal="child_exiting_tree" from="Level" to="." method="_on_level_child_exiting_tree"]
+[connection signal="hp_changed" from="Level/Player" to="Control/Panel/HpBar" method="_on_player_hp_changed"]
 [connection signal="toggled" from="Control/PauseButton" to="Control/PauseButton" method="_on_toggled"]
 [connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_timer_timeout"]

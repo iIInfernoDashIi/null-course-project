@@ -22,7 +22,7 @@ func _on_life_time_timeout():
 
 func _on_body_entered(body):
 	if body.name == "Player":
-		body.take_damage(self)
+		body.damage(self)
 
 
 func destroy():
@@ -32,4 +32,8 @@ func destroy():
 		projectile.position = position
 		projectile.rotation_degrees = i * 90 + 45
 		add_sibling(projectile)
+	if (by_shoot == true and randi() % 100 > 90):
+		var drop = load("res://scenes/hp.tscn").instantiate()
+		drop.position = position
+		add_sibling(drop)
 	queue_free()

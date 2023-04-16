@@ -12,8 +12,9 @@ func _on_life_time_timeout():
 
 
 func _on_area_entered(area):
-	area.hp -= 1
-	if (area.hp == 0): 
-		area.by_shoot = true
-		area.destroy()
-	queue_free()
+	if ("Asteroid" in area.name):
+		area.hp -= 1
+		if (area.hp == 0): 
+			area.by_shoot = true
+			area.destroy()
+		queue_free()

@@ -1,10 +1,10 @@
 extends CharacterBody2D
 
-signal damaged(hp: int)
+signal hp_changed(hp: int)
 
 @export var speed: int = 600
 @export var immunity_frames: int = 60
-@export var start_hp: int = 5
+@export var start_hp: int = 3
 
 @onready var projectile_scene = preload("res://scenes/player_projectile.tscn")
 @onready var hp := start_hp
@@ -32,14 +32,23 @@ func _process(delta):
 		add_sibling(projectile)
 
 
-func take_damage(projectile: Node2D = null):
+func damage(projectile: Node2D = null):
 	if $ImmunityTimer.is_stopped():
 		if projectile != null: projectile.destroy()
 		hp -= 1
-		damaged.emit(hp)
+		hp_changed.emit(hp)
 		if (hp == 0): queue_free()
 		$ImmunityTimer.start()
 		$Sprite/Animation.play("blink")
+
+
+func heal():
+	hp += 1
+	if (hp > 5):
+		hp = 5
+		$"../..".score += 5000
+		$"../..".update_score()
+	hp_changed.emit(hp)
 
 
 func _on_immunity_timer_timeout():
