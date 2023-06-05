@@ -11,6 +11,7 @@ var by_shoot = false
 @export var projectile_speed: int = 65
 
 
+# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	position += Vector2(0,1).rotated(rotation) * speed * delta
 

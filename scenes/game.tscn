@@ -1,4 +1,5 @@
 [gd_scene load_steps=17 format=3 uid="uid://sqcuvh4lmyas"]
+[gd_scene load_steps=27 format=3 uid="uid://bx1rqywbxh2mx"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_00ya3"]
 [ext_resource type="Texture2D" uid="uid://b62w7bkcfywx8" path="res://assets/bg0.png" id="2_7r2xh"]
@@ -9,6 +10,13 @@
 [ext_resource type="Texture2D" uid="uid://cyu30qqat5ovo" path="res://assets/ui/pause.png" id="8_7yiuj"]
 [ext_resource type="Texture2D" uid="uid://cnr2imcvswmhl" path="res://assets/ui/pause_pressed.png" id="9_bajnv"]
 [ext_resource type="Texture2D" uid="uid://dt7give63llmw" path="res://assets/ui/pause_hover.png" id="10_3xtau"]
+[ext_resource type="Texture2D" uid="uid://cbx7aro8akh6a" path="res://assets/ui/sumbit.png" id="10_fcdle"]
+[ext_resource type="Texture2D" uid="uid://cpxpvvh3u2nvf" path="res://assets/ui/sumbit_pressed.png" id="11_lvx05"]
+[ext_resource type="Texture2D" uid="uid://uupail34wchg" path="res://assets/ui/sumbit_hover.png" id="12_e44lg"]
+[ext_resource type="Texture2D" uid="uid://b3xdq67dh84ac" path="res://assets/ui/sumbit_disabled.png" id="13_mpb4r"]
+[ext_resource type="Texture2D" uid="uid://ceivvcydeq8t" path="res://assets/ui/restart.png" id="13_p00ej"]
+[ext_resource type="Texture2D" uid="uid://c67d35ctwf5bh" path="res://assets/ui/restart_pressed.png" id="14_66hei"]
+[ext_resource type="Texture2D" uid="uid://bmuc54ha5fqkg" path="res://assets/ui/restart_hover.png" id="15_vmtpj"]
 
 [sub_resource type="GDScript" id="GDScript_dvwpi"]
 resource_name = "bg"
@@ -65,6 +73,26 @@ script/source = "extends Node
 
 func _on_toggled(button_pressed):
 	get_tree().paused = button_pressed
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_etxax"]
+bg_color = Color(0.6, 0.6, 0.6, 0.25098)
+
+[sub_resource type="GDScript" id="GDScript_2kjc2"]
+resource_name = "Submit"
+script/source = "extends TextureButton
+
+func _on_pressed():
+	$\"../Panel/HTTPRequest\".request(\"http://infdash.temp.swtest.ru/submit.php?nick=\"+$\"../Panel/Nick\".text+\"&score=\"+$\"../Panel/Score\".text)
+	disabled = true
+"
+
+[sub_resource type="GDScript" id="GDScript_20t64"]
+resource_name = "Restart"
+script/source = "extends TextureButton
+
+func _on_pressed():
+	get_tree().reload_current_scene()
 "
 
 [node name="Game" type="Node2D"]
@@ -143,7 +171,7 @@ offset_bottom = 15.0
 grow_horizontal = 0
 size_flags_horizontal = 4
 size_flags_vertical = 0
-toggle_mode = true
+focus_mode = 0
 action_mode = 0
 shortcut = SubResource("Shortcut_julpb")
 shortcut_feedback = false
@@ -154,6 +182,123 @@ texture_hover = ExtResource("10_3xtau")
 stretch_mode = 0
 script = SubResource("GDScript_78y3s")
 
+[node name="Overlay" type="Panel" parent="Control"]
+visible = false
+layout_mode = 0
+offset_right = 160.0
+offset_bottom = 224.0
+
+[node name="Panel" type="Panel" parent="Control/Overlay"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 82.0
+offset_right = 146.0
+offset_bottom = 118.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_d4j6l")
+
+[node name="GameOver" type="Label" parent="Control/Overlay/Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -32.0
+offset_right = 32.0
+offset_bottom = 18.0
+grow_horizontal = 2
+text = "GAME OVER"
+label_settings = SubResource("LabelSettings_hyjtx")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Score" type="Label" parent="Control/Overlay/Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 12.0
+offset_top = 18.0
+offset_right = 62.0
+offset_bottom = 34.0
+grow_horizontal = 2
+text = "0"
+label_settings = SubResource("LabelSettings_hyjtx")
+horizontal_alignment = 2
+
+[node name="Nick" type="LineEdit" parent="Control/Overlay/Panel"]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 14.0
+offset_right = 74.0
+offset_bottom = 35.0
+focus_neighbor_left = NodePath("../../Submit")
+focus_neighbor_right = NodePath("../../Restart")
+theme_override_fonts/font = ExtResource("6_1mm6w")
+theme_override_styles/focus = SubResource("StyleBoxFlat_etxax")
+placeholder_text = "_____"
+max_length = 5
+flat = true
+caret_blink = true
+caret_blink_interval = 0.45
+
+[node name="NickLable" type="Label" parent="Control/Overlay/Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -62.0
+offset_top = 18.0
+offset_right = -32.0
+offset_bottom = 34.0
+grow_horizontal = 2
+text = "Name:"
+label_settings = SubResource("LabelSettings_hyjtx")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="Control/Overlay/Panel"]
+use_threads = true
+timeout = 10.0
+
+[node name="Submit" type="TextureButton" parent="Control/Overlay"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 28.0
+offset_top = -100.0
+offset_right = 69.0
+offset_bottom = -86.0
+grow_vertical = 0
+focus_neighbor_top = NodePath("../Panel/Nick")
+focus_neighbor_right = NodePath("../Restart")
+shortcut_feedback = false
+shortcut_in_tooltip = false
+texture_normal = ExtResource("10_fcdle")
+texture_pressed = ExtResource("11_lvx05")
+texture_hover = ExtResource("12_e44lg")
+texture_disabled = ExtResource("13_mpb4r")
+script = SubResource("GDScript_2kjc2")
+
+[node name="Restart" type="TextureButton" parent="Control/Overlay"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -72.0
+offset_top = -100.0
+offset_right = -25.0
+offset_bottom = -86.0
+grow_horizontal = 0
+grow_vertical = 0
+focus_neighbor_left = NodePath("../Submit")
+focus_neighbor_top = NodePath("../Panel/Nick")
+shortcut_feedback = false
+shortcut_in_tooltip = false
+texture_normal = ExtResource("13_p00ej")
+texture_pressed = ExtResource("14_66hei")
+texture_hover = ExtResource("15_vmtpj")
+script = SubResource("GDScript_20t64")
+
 [node name="EnemyTimer" type="Timer" parent="."]
 wait_time = 1.5
 autostart = true
@@ -161,4 +306,6 @@ autostart = true
 [connection signal="child_exiting_tree" from="Level" to="." method="_on_level_child_exiting_tree"]
 [connection signal="hp_changed" from="Level/Player" to="Control/Panel/HpBar" method="_on_player_hp_changed"]
 [connection signal="toggled" from="Control/PauseButton" to="Control/PauseButton" method="_on_toggled"]
+[connection signal="pressed" from="Control/Overlay/Submit" to="Control/Overlay/Submit" method="_on_pressed"]
+[connection signal="pressed" from="Control/Overlay/Restart" to="Control/Overlay/Restart" method="_on_pressed"]
 [connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_timer_timeout"]

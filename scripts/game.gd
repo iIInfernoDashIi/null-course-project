@@ -19,6 +19,11 @@ func _on_level_child_exiting_tree(node):
 	if ("Asteroid" in node.name and node.by_shoot == true):
 		score += node.score
 		update_score()
+	if ("Player" == node.name):
+		$Control/Overlay.show()
+		$Control/PauseButton.process_mode = Node.PROCESS_MODE_DISABLED
+		$Control/Overlay/Panel/Score.text = $Control/Panel/Score.text
+		$Control/Overlay/Panel/Nick.grab_focus()
 
 
 func update_score():
