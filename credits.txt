@@ -1,0 +1,9 @@
+# Font - Monogram
+Monogram is a free and Creative Commons Zero pixel font,
+made by Vinícius Menézio (@vmenezio)
+https://datagoblin.itch.io/monogram
+
+# Sprites - Space Shooter Asset Pack
+8x8 Space shooter asset pack, complete with characters, ships, shots, UI and more!
+made by Gustavo Vituri (@GustavoVituri)
+https://gvituri.itch.io/space-shooter

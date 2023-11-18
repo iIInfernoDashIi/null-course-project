@@ -1,0 +1,101 @@
+[gd_scene load_steps=12 format=3 uid="uid://c7xhqeiovp07s"]
+
+[ext_resource type="Script" path="res://scripts/player/player.gd" id="1_vitbf"]
+[ext_resource type="Texture2D" uid="uid://co4rp103o5io6" path="res://assets/player/player.png" id="2_lcyhb"]
+[ext_resource type="Texture2D" uid="uid://donp1xi7sgwqv" path="res://assets/player/player_fire.png" id="3_p78op"]
+
+[sub_resource type="Animation" id="Animation_cvjbc"]
+resource_name = "immune"
+length = 0.1
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_60nqh"]
+_data = {
+"blink": SubResource("Animation_cvjbc")
+}
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ivy3i"]
+atlas = ExtResource("3_p78op")
+region = Rect2(0, 0, 2, 3)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fu3c1"]
+atlas = ExtResource("3_p78op")
+region = Rect2(8, 0, 2, 3)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ao26o"]
+atlas = ExtResource("3_p78op")
+region = Rect2(16, 0, 2, 3)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3gomt"]
+atlas = ExtResource("3_p78op")
+region = Rect2(24, 0, 2, 3)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6ra8t"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ivy3i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fu3c1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ao26o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3gomt")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6sk2r"]
+size = Vector2(2, 2)
+
+[node name="Player" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_vitbf")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(-9.53674e-07, -9.53674e-07)
+texture = ExtResource("2_lcyhb")
+hframes = 3
+frame = 1
+
+[node name="Animation" type="AnimationPlayer" parent="Sprite"]
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_60nqh")
+}
+
+[node name="Fire" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1, 4)
+sprite_frames = SubResource("SpriteFrames_6ra8t")
+autoplay = "default"
+frame_progress = 0.970244
+centered = false
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_6sk2r")
+
+[node name="ImmunityTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="ReloadTimer" type="Timer" parent="."]
+wait_time = 0.2
+
+[connection signal="timeout" from="ImmunityTimer" to="." method="_on_immunity_timer_timeout"]
+[connection signal="timeout" from="ReloadTimer" to="." method="_on_reload_timer_timeout"]

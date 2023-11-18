@@ -1,0 +1,85 @@
+[gd_scene load_steps=8 format=3 uid="uid://cvft6twxd57ts"]
+
+[ext_resource type="Script" path="res://scripts/enemies/boss_3.gd" id="1_lserw"]
+[ext_resource type="PackedScene" uid="uid://dctuh0chifq5b" path="res://scenes/enemies/boss_3_projectile.tscn" id="2_cywce"]
+[ext_resource type="Texture2D" uid="uid://bh7jlwa1fwogd" path="res://assets/enemies/boss_3.png" id="2_yimhf"]
+
+[sub_resource type="Curve2D" id="Curve2D_k3lp5"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 64, 32, 0, 0, 0, 0, -64, 32, 0, 0, 0, 0, -64, 0, 0, 0, 0, 0, 0, 0)
+}
+point_count = 6
+
+[sub_resource type="Animation" id="Animation_8i4jq"]
+resource_name = "appear"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1.25, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.75, 1),
+"update": 0,
+"values": [Vector2(0, -16), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_eugun"]
+_data = {
+"appear": SubResource("Animation_8i4jq")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ghf1x"]
+size = Vector2(14, 14)
+
+[node name="Boss1" type="Node2D"]
+metadata/boss = true
+
+[node name="Path" type="Path2D" parent="."]
+position = Vector2(0, 32)
+curve = SubResource("Curve2D_k3lp5")
+
+[node name="PathFollow" type="PathFollow2D" parent="Path"]
+rotation = 0.463648
+rotates = false
+
+[node name="Area" type="Area2D" parent="Path/PathFollow"]
+position = Vector2(-14.3108, -28.6217)
+rotation = -0.463648
+script = ExtResource("1_lserw")
+projectile_scene = ExtResource("2_cywce")
+
+[node name="Sprite" type="Sprite2D" parent="Path/PathFollow/Area"]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(0, -16)
+texture = ExtResource("2_yimhf")
+
+[node name="Animation" type="AnimationPlayer" parent="Path/PathFollow/Area/Sprite"]
+libraries = {
+"": SubResource("AnimationLibrary_eugun")
+}
+
+[node name="Collision" type="CollisionShape2D" parent="Path/PathFollow/Area"]
+position = Vector2(-5.79357e-05, 1.14441e-05)
+shape = SubResource("RectangleShape2D_ghf1x")
+
+[node name="SpawnerTimer" type="Timer" parent="Path/PathFollow/Area"]
+wait_time = 0.5
+autostart = true
+
+[connection signal="body_entered" from="Path/PathFollow/Area" to="Path/PathFollow/Area" method="_on_body_entered"]
+[connection signal="timeout" from="Path/PathFollow/Area/SpawnerTimer" to="Path/PathFollow/Area" method="_on_spawner_timer_timeout"]

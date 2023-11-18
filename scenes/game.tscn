@@ -1,16 +1,18 @@
-[gd_scene load_steps=27 format=3 uid="uid://bx1rqywbxh2mx"]
+[gd_scene load_steps=34 format=3 uid="uid://sqcuvh4lmyas"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_00ya3"]
-[ext_resource type="Texture2D" uid="uid://b62w7bkcfywx8" path="res://assets/bg0.png" id="2_7r2xh"]
-[ext_resource type="PackedScene" uid="uid://c7xhqeiovp07s" path="res://scenes/player.tscn" id="4_glhq7"]
+[ext_resource type="Texture2D" uid="uid://b62w7bkcfywx8" path="res://assets/bg/bg0.png" id="2_f4rn2"]
+[ext_resource type="PackedScene" uid="uid://c7xhqeiovp07s" path="res://scenes/player/player.tscn" id="4_glhq7"]
 [ext_resource type="Texture2D" uid="uid://ce6aj2gaissed" path="res://assets/ui/panel.png" id="5_sngx8"]
 [ext_resource type="FontFile" uid="uid://bik5l33o2vs3s" path="res://fonts/monogram-extended.ttf" id="6_1mm6w"]
 [ext_resource type="Texture2D" uid="uid://q2fo0pxgrjhj" path="res://assets/ui/heart.png" id="6_bw7w5"]
 [ext_resource type="Texture2D" uid="uid://cyu30qqat5ovo" path="res://assets/ui/pause.png" id="8_7yiuj"]
 [ext_resource type="Texture2D" uid="uid://cnr2imcvswmhl" path="res://assets/ui/pause_pressed.png" id="9_bajnv"]
 [ext_resource type="Texture2D" uid="uid://dt7give63llmw" path="res://assets/ui/pause_hover.png" id="10_3xtau"]
+[ext_resource type="Texture2D" uid="uid://c4tcpr3kquy0n" path="res://assets/ui/full.png" id="10_67qse"]
 [ext_resource type="Texture2D" uid="uid://cbx7aro8akh6a" path="res://assets/ui/sumbit.png" id="10_fcdle"]
 [ext_resource type="Texture2D" uid="uid://cpxpvvh3u2nvf" path="res://assets/ui/sumbit_pressed.png" id="11_lvx05"]
+[ext_resource type="Texture2D" uid="uid://dte6v84nrgaa1" path="res://assets/ui/full_hover.png" id="12_7gi1o"]
 [ext_resource type="Texture2D" uid="uid://uupail34wchg" path="res://assets/ui/sumbit_hover.png" id="12_e44lg"]
 [ext_resource type="Texture2D" uid="uid://b3xdq67dh84ac" path="res://assets/ui/sumbit_disabled.png" id="13_mpb4r"]
 [ext_resource type="Texture2D" uid="uid://ceivvcydeq8t" path="res://assets/ui/restart.png" id="13_p00ej"]
@@ -59,11 +61,11 @@ font = ExtResource("6_1mm6w")
 shadow_size = 0
 shadow_color = Color(0, 0, 0, 1)
 
-[sub_resource type="InputEventAction" id="InputEventAction_l3jiy"]
+[sub_resource type="InputEventAction" id="InputEventAction_o0j8p"]
 action = &"pause"
 
 [sub_resource type="Shortcut" id="Shortcut_julpb"]
-events = [SubResource("InputEventAction_l3jiy")]
+events = [SubResource("InputEventAction_o0j8p")]
 
 [sub_resource type="GDScript" id="GDScript_78y3s"]
 resource_name = "pause"
@@ -74,6 +76,30 @@ func _on_toggled(button_pressed):
 	get_tree().paused = button_pressed
 "
 
+[sub_resource type="InputEventAction" id="InputEventAction_c8wog"]
+action = &"fullscreen"
+
+[sub_resource type="Shortcut" id="Shortcut_gx1gh"]
+events = [SubResource("InputEventAction_c8wog")]
+
+[sub_resource type="GDScript" id="GDScript_vc3xr"]
+resource_name = "fullscreen"
+script/source = "extends Node
+
+
+func _on_toggled(button_pressed):
+	if button_pressed:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)	
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lhji2"]
+bg_color = Color(0.145098, 0.0156863, 0.247059, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v32vo"]
+bg_color = Color(0.572549, 0.254902, 0.952941, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_etxax"]
 bg_color = Color(0.6, 0.6, 0.6, 0.25098)
 
@@ -82,7 +108,7 @@ resource_name = "Submit"
 script/source = "extends TextureButton
 
 func _on_pressed():
-	$\"../Panel/HTTPRequest\".request(\"http://infdash.temp.swtest.ru/submit.php?nick=\"+$\"../Panel/Nick\".text+\"&score=\"+$\"../Panel/Score\".text)
+	$\"../HTTPRequest\".request(\"http://infdash.temp.swtest.ru/submit.php?nick=\"+$\"../Nick\".text+\"&score=\"+$\"../Score\".text)
 	disabled = true
 "
 
@@ -106,7 +132,7 @@ show_behind_parent = true
 offset_top = -272.0
 offset_right = 160.0
 offset_bottom = 240.0
-texture = ExtResource("2_7r2xh")
+texture = ExtResource("2_f4rn2")
 stretch_mode = 1
 script = SubResource("GDScript_dvwpi")
 
@@ -130,7 +156,7 @@ metadata/_edit_lock_ = true
 layout_mode = 0
 offset_left = 6.0
 offset_top = 2.0
-offset_right = 138.0
+offset_right = 122.0
 offset_bottom = 16.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_d4j6l")
 
@@ -171,6 +197,7 @@ grow_horizontal = 0
 size_flags_horizontal = 4
 size_flags_vertical = 0
 focus_mode = 0
+toggle_mode = true
 action_mode = 0
 shortcut = SubResource("Shortcut_julpb")
 shortcut_feedback = false
@@ -180,6 +207,42 @@ texture_pressed = ExtResource("9_bajnv")
 texture_hover = ExtResource("10_3xtau")
 stretch_mode = 0
 script = SubResource("GDScript_78y3s")
+
+[node name="FSButton" type="TextureButton" parent="Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -32.0
+offset_top = 2.0
+offset_right = -20.0
+offset_bottom = 15.0
+grow_horizontal = 0
+size_flags_horizontal = 4
+size_flags_vertical = 0
+focus_mode = 0
+toggle_mode = true
+action_mode = 0
+shortcut = SubResource("Shortcut_gx1gh")
+shortcut_feedback = false
+shortcut_in_tooltip = false
+texture_normal = ExtResource("10_67qse")
+texture_pressed = ExtResource("10_67qse")
+texture_hover = ExtResource("12_7gi1o")
+stretch_mode = 0
+script = SubResource("GDScript_vc3xr")
+
+[node name="ProgressBar" type="ProgressBar" parent="Control"]
+layout_mode = 0
+offset_top = 222.0
+offset_right = 160.0
+offset_bottom = 224.0
+theme_override_styles/background = SubResource("StyleBoxFlat_lhji2")
+theme_override_styles/fill = SubResource("StyleBoxFlat_v32vo")
+max_value = 30.0
+step = 1.0
+allow_greater = true
+show_percentage = false
 
 [node name="Overlay" type="Panel" parent="Control"]
 visible = false
@@ -229,8 +292,6 @@ offset_left = 34.0
 offset_top = 14.0
 offset_right = 74.0
 offset_bottom = 35.0
-focus_neighbor_left = NodePath("../../Submit")
-focus_neighbor_right = NodePath("../../Restart")
 theme_override_fonts/font = ExtResource("6_1mm6w")
 theme_override_styles/focus = SubResource("StyleBoxFlat_etxax")
 placeholder_text = "_____"
@@ -266,8 +327,6 @@ offset_top = -100.0
 offset_right = 69.0
 offset_bottom = -86.0
 grow_vertical = 0
-focus_neighbor_top = NodePath("../Panel/Nick")
-focus_neighbor_right = NodePath("../Restart")
 shortcut_feedback = false
 shortcut_in_tooltip = false
 texture_normal = ExtResource("10_fcdle")
@@ -289,8 +348,6 @@ offset_right = -25.0
 offset_bottom = -86.0
 grow_horizontal = 0
 grow_vertical = 0
-focus_neighbor_left = NodePath("../Submit")
-focus_neighbor_top = NodePath("../Panel/Nick")
 shortcut_feedback = false
 shortcut_in_tooltip = false
 texture_normal = ExtResource("13_p00ej")
@@ -302,9 +359,9 @@ script = SubResource("GDScript_20t64")
 wait_time = 1.5
 autostart = true
 
-[connection signal="child_exiting_tree" from="Level" to="." method="_on_level_child_exiting_tree"]
 [connection signal="hp_changed" from="Level/Player" to="Control/Panel/HpBar" method="_on_player_hp_changed"]
 [connection signal="toggled" from="Control/PauseButton" to="Control/PauseButton" method="_on_toggled"]
+[connection signal="toggled" from="Control/FSButton" to="Control/FSButton" method="_on_toggled"]
 [connection signal="pressed" from="Control/Overlay/Submit" to="Control/Overlay/Submit" method="_on_pressed"]
 [connection signal="pressed" from="Control/Overlay/Restart" to="Control/Overlay/Restart" method="_on_pressed"]
 [connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_timer_timeout"]

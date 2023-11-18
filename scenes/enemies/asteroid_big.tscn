@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://btiok5ec5vkta"]
+
+[ext_resource type="Script" path="res://scripts/enemies/asteroid_big.gd" id="1_m7foq"]
+[ext_resource type="PackedScene" uid="uid://bpa8qfkck0cxv" path="res://scenes/enemies/asteroid.tscn" id="2_0qiur"]
+[ext_resource type="Texture2D" uid="uid://csyxkhm2uymoq" path="res://assets/enemies/asteroid_big.png" id="3_b6qtr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ghf1x"]
+size = Vector2(12, 12)
+
+[node name="AsteroidBig" type="Node2D"]
+
+[node name="Area" type="Area2D" parent="."]
+script = ExtResource("1_m7foq")
+projectile_scene = ExtResource("2_0qiur")
+
+[node name="Sprite" type="Sprite2D" parent="Area"]
+position = Vector2(0, 4.76837e-07)
+texture = ExtResource("3_b6qtr")
+
+[node name="Collision" type="CollisionShape2D" parent="Area"]
+shape = SubResource("RectangleShape2D_ghf1x")
+
+[node name="LifeTime" type="Timer" parent="Area"]
+wait_time = 10.0
+one_shot = true
+autostart = true
+
+[connection signal="body_entered" from="Area" to="Area" method="_on_body_entered"]
+[connection signal="timeout" from="Area/LifeTime" to="Area" method="_on_life_time_timeout"]

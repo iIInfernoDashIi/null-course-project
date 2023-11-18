@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://bpa8qfkck0cxv"]
+
+[ext_resource type="Script" path="res://scripts/enemies/asteroid.gd" id="1_adeyw"]
+[ext_resource type="Texture2D" uid="uid://m4pdn7deno1h" path="res://assets/enemies/asteroid.png" id="2_8rwrp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_76o2t"]
+size = Vector2(6, 6)
+
+[node name="Asteroid" type="Node2D"]
+
+[node name="Area" type="Area2D" parent="."]
+script = ExtResource("1_adeyw")
+
+[node name="Sprite" type="Sprite2D" parent="Area"]
+texture = ExtResource("2_8rwrp")
+
+[node name="Collision" type="CollisionShape2D" parent="Area"]
+shape = SubResource("RectangleShape2D_76o2t")
+
+[node name="LifeTime" type="Timer" parent="Area"]
+wait_time = 10.0
+one_shot = true
+autostart = true
+
+[connection signal="body_entered" from="Area" to="Area" method="_on_body_entered"]
+[connection signal="timeout" from="Area/LifeTime" to="Area" method="_on_life_time_timeout"]
